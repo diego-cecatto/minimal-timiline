@@ -1,0 +1,101 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    padding: 0 8px;
+    // user-select: none;
+    // -moz-user-select: none;
+    // -ms-user-select: none;
+    // -webkit-user-select: none;
+}
+
+.timelineContainer {
+    display: flex;
+    width: 100%;
+    position: relative;
+
+    .event {
+        position: absolute;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px dashed white;
+        &.hover {
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .fieldEditor {
+            background-color: transparent;
+            width: 100%;
+            color: white;
+            border: none;
+            box-shadow: none;
+            outline: none;
+            font-size: 14px;
+        }
+    }
+}
+
+.monthContainer {
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .month {
+        width: 100%;
+        .navigationIcon {
+            cursor: pointer;
+            margin: 0 10px;
+            vertical-align: middle;
+            &.disabled {
+                color: #ccc;
+            }
+        }
+    }
+}
+
+.monthContainer {
+    .month {
+        text-align: center;
+        margin-top: 18px;
+        font-size: 20px;
+    }
+    .dayList {
+        display: flex;
+        padding: 0px;
+
+        .day {
+            list-style: none;
+            padding: 0px;
+        }
+    }
+}
+
+.startHandlerResize,
+.endHandlerResize {
+    position: absolute;
+    cursor: ew-resize;
+    width: 10px;
+    opacity: 0;
+    top: 0;
+    height: 28px;
+    // z-index: 1;
+}
+.startHandlerResize {
+    left: 0;
+}
+.endHandlerResize {
+    right: 0;
+}
+
+.resizeOverlay {
+    position: absolute;
+    top: -91px;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    cursor: ew-resize;
+    z-index: 10;
+    // background: rgba(0, 0, 0, 0.1);
+}
