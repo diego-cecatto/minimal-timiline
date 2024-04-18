@@ -13,7 +13,6 @@ const COLORBLIND_FRIENLY_PALLETE: string[] = [
 ];
 export function getColorFromIndex(index: number): string {
     const colorIndex = index % COLORBLIND_FRIENLY_PALLETE.length;
-    console.log('colorIndex', colorIndex);
     return COLORBLIND_FRIENLY_PALLETE[colorIndex];
 }
 export function getColorFromDate(dateString: string): string {

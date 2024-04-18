@@ -31,8 +31,9 @@ export declare type TimelineMonth = {
     events: TimelineItem[];
 };
 
-declare type TimelineState = {
+export declare type TimelineState = {
     months: TimelineMonth[];
+    events: TimelineItem[];
     currMonth: {
         index: number;
         daysInMonth: number;
@@ -43,7 +44,7 @@ export const INITIALIZER_TIMELINE: (value: TimelineItem[]) => TimelineState = (
     event
 ) => {
     return TIMELINE_REDUCER(
-        { months: [], currMonth: { daysInMonth: 0, index: 0 } },
+        { months: [], events: [], currMonth: { daysInMonth: 0, index: 0 } },
         { action: 'init', value: event }
     );
 };
