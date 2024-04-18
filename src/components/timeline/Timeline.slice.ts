@@ -24,7 +24,7 @@ export declare type TimelineMonth = {
     events: TimelineItem[];
 };
 
-declare type TimelineState = {
+export declare type TimelineState = {
     months: TimelineMonth[];
     events: TimelineItem[];
     currMonth: {

@@ -4,8 +4,7 @@ import styles from './Timeline.module.scss';
 import { TimelineItem } from '../../actions/timeline/timeline.mock.ation';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { TimelineState } from './Timeline.reducer';
-import { changeDay, changeName } from './Timeline.slice';
+import { TimelineState, changeDay, changeName } from './Timeline.slice';
 
 export const Events = () => {
     const [editing, setEditing] = useState<TimelineItem | null>();

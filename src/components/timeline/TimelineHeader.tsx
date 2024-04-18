@@ -1,9 +1,8 @@
-import { TimelineState } from './Timeline.reducer';
 import styles from './Timeline.module.scss';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeMonth } from './Timeline.slice';
+import { TimelineState, changeMonth } from './Timeline.slice';
 
 export const TimelineHeader = () => {
     const dispatch = useDispatch();

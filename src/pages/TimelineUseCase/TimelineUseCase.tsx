@@ -1,12 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    TimelineAction,
-    TimelineItem,
-} from '../../actions/timeline/timeline.mock.ation';
+import { TimelineAction } from '../../actions/timeline/timeline.mock.ation';
 import { Timeline } from '../../components/timeline/Timeline';
-import { init } from '../../components/timeline/Timeline.slice';
-import { TimelineState } from '../../components/timeline/Timeline.reducer';
+import { TimelineState, init } from '../../components/timeline/Timeline.slice';
 
 export const TimelineUseCase = () => {
     const dispatch = useDispatch();
