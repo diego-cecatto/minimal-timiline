@@ -22,6 +22,7 @@ body {
 
         .laneDay {
             list-style: none;
+            height: 28px;
         }
     }
 
@@ -90,7 +91,7 @@ body {
     opacity: 0;
     top: 0;
     height: 28px;
-    // z-index: 1;
+    z-index: 1;
 }
 .startHandlerResize {
     left: 0;
@@ -108,4 +109,11 @@ body {
     cursor: ew-resize;
     z-index: 10;
     // background: rgba(0, 0, 0, 0.1);
+}
+
+#invisible-image {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }

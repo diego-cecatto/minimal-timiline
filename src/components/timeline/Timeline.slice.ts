@@ -119,6 +119,31 @@ const timelineReducer = createSlice({
             // });
             return state;
         },
+        changeInterval: (state, action) => {
+            const { event, day } = action.payload;
+            var MONTH = state.months[state.currMonth.index];
+            const EV_INDEX = MONTH.events.findIndex((e) => {
+                return e.id === event.id;
+            });
+            if (EV_INDEX === -1) {
+                return state;
+            }
+            const start = moment(event.start, 'YYYY-MM-DD');
+            const newStart = moment(
+                event.start.slice(0, 8) + day,
+                'YYYY-MM-DD'
+            );
+            var diff = start.diff(newStart, 'days');
+            const end = moment(event.end, 'YYYY-MM-DD');
+            const newEnd = moment(end).subtract(diff, 'days');
+            MONTH.events[EV_INDEX] = {
+                ...event,
+                start: newStart.format('YYYY-MM-DD'),
+                end: newEnd.format('YYYY-MM-DD'),
+            };
+            MONTH.events = reorderTimelineItemsByStartAndDuration(MONTH.events);
+            return state;
+        },
         changeMonth: (state, action) => {
             const monthIndex = action.payload;
             if (monthIndex > 11 || monthIndex < 0) {
@@ -144,7 +169,7 @@ const timelineReducer = createSlice({
         },
     },
 });
-export const { changeName, changeDay, changeMonth, init } =
+export const { changeName, changeDay, changeMonth, init, changeInterval } =
     timelineReducer.actions;
 
 export default timelineReducer.reducer;
