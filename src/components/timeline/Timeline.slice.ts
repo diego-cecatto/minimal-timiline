@@ -1,4 +1,4 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { TimelineItem } from '../../actions/timeline/timeline.mock.ation';
 import moment from 'moment';
 import {
@@ -88,7 +88,13 @@ const timelineReducer = createSlice({
             return state;
         },
         changeDay: (state, action) => {
-            const { event, propName, days } = action.payload;
+            let { event, propName, days } = action.payload;
+            if (days >= state.currMonth.daysInMonth) {
+                days = state.currMonth.daysInMonth - 1;
+            }
+            if (days < 0) {
+                days = 0;
+            }
             var MONTH = state.months[state.currMonth.index];
             const EV_INDEX = MONTH.events.findIndex((e) => {
                 return e.id === event.id;
@@ -96,8 +102,13 @@ const timelineReducer = createSlice({
             if (EV_INDEX === -1) {
                 return state;
             }
-            const date = moment(event[propName], 'YYYY-MM-DD');
-            date.set('date', days + 1);
+            const date = moment(
+                event[propName].slice(0, 5) +
+                    (state.currMonth.index + 1) +
+                    '-' +
+                    (days + 1),
+                'YYYY-MM-DD'
+            );
             MONTH.events[EV_INDEX] = {
                 ...event,
                 [propName]: date.format('YYYY-MM-DD'),

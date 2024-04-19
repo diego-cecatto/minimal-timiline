@@ -6,13 +6,17 @@ import { Events } from './TimelineEvents';
 declare type TimelineProps = {
     events: TimelineItem[];
 };
+
 //todo if I have other in the same position do some process to put a lit bit left
-//todo responsive
 //todo add drag and drop
+//todo responsive
 //todo add zoom
-//todo fix: is not resing the last item
-//todo clean code
 //todo implement compass
+
+//todo include elements that have started in the previous month
+//todo indicates that is ocuped in the previous month or next month
+
+//todo is not ordening rightly
 
 export const Timeline = ({ events }: TimelineProps) => {
     return (

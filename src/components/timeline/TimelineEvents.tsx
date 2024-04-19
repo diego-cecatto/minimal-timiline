@@ -48,7 +48,7 @@ export const Events = () => {
                     days: DAYS,
                 })
             );
-        }, 10);
+        }, 3);
     };
 
     const stopResize = () => {
@@ -83,10 +83,11 @@ export const Events = () => {
                 const width = (duration / currMonth.daysInMonth) * 100;
                 const left =
                     (startDate.date() - 1) * (100 / currMonth.daysInMonth);
+                // console.log(startDate, endDate, duration);
                 return (
                     <div
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-html={`<div>${event.name}</div><div>${event.start} - ${event.end}</div>`}
+                        data-tooltip-html={`<div>${event.name}</div><div>${event.start} / ${event.end}</div>`}
                         key={event.id}
                         className={`${styles.event} ${
                             (hoverItem && hoverItem.id === event.id) ||
