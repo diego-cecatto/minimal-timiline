@@ -21,7 +21,6 @@ export const Events = () => {
     const { months, currMonth }: TimelineState = useSelector(
         (state: any) => state.timeline
     );
-    const { events } = months[currMonth.index];
 
     const startResize = (
         item: TimelineItem,
@@ -70,94 +69,77 @@ export const Events = () => {
         clearTimeout(hoverHandlerRef.current);
     };
 
+    const handleMouseEnter = (event: TimelineItem) => {
+        clearTimeout(hoverHandlerRef.current);
+        hoverHandlerRef.current = setTimeout(() => {
+            setHover(event);
+        }, 300);
+    };
+
+    const handleMouseLeave = (event: React.MouseEvent) => {
+        if (resizingEvent.item) {
+            return;
+        }
+        clearTimeout(hoverHandlerRef.current);
+        hoverHandlerRef.current = setTimeout(() => {
+            setHover(null);
+        }, 500);
+    };
+    const handleStartEditItem = (event: TimelineItem) => {
+        document.addEventListener('click', handleCloseEdit);
+        setEditing(event);
+    };
+
+    const handleChangeName = (event: TimelineItem, name: string) => {
+        dispatch(
+            changeName({
+                event: editing,
+                name: name,
+            })
+        );
+    };
+
+    const MONTH = months[currMonth.index];
+    let currIndex = 0;
+    const getAllLaneItems = (day: number) => {
+        var laneItems = [];
+        for (var i = currIndex, tot = MONTH.events.length; i < tot; i++) {
+            if (Number(MONTH.events[i].start.slice(8)) === day) {
+                laneItems.push(
+                    <LaneItem
+                        event={MONTH.events[i]}
+                        currMonth={currMonth}
+                        handleMouseEnter={handleMouseEnter}
+                        handleMouseLeave={handleMouseLeave}
+                        handleResize={startResize}
+                        handleStartEditItem={handleStartEditItem}
+                        handleChangeName={handleChangeName}
+                        editing={editing}
+                        hoverItem={hoverItem}
+                    />
+                );
+            } else {
+                currIndex = i;
+                break;
+            }
+        }
+        return laneItems;
+    };
+
     return (
         <>
-            {events.map((event) => {
-                const startDate = moment(event.start, 'YYYY-MM-DD');
-                const endDate = moment(event.end, 'YYYY-MM-DD');
-                let duration = endDate.diff(startDate, 'days') + 1;
-                if (duration > currMonth.daysInMonth) {
-                    duration = currMonth.daysInMonth - startDate.date() + 1;
-                }
-
-                const width = (duration / currMonth.daysInMonth) * 100;
-                const left =
-                    (startDate.date() - 1) * (100 / currMonth.daysInMonth);
-                // console.log(startDate, endDate, duration);
-                return (
-                    <div
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-html={`<div>${event.name}</div><div>${event.start} / ${event.end}</div>`}
-                        key={event.id}
-                        className={`${styles.event} ${
-                            (hoverItem && hoverItem.id === event.id) ||
-                            (editing && editing.id === event.id)
-                                ? styles.hover
-                                : null
-                        }`}
-                        onMouseEnter={() => {
-                            clearTimeout(hoverHandlerRef.current);
-                            hoverHandlerRef.current = setTimeout(() => {
-                                setHover(event);
-                            }, 300);
-                        }}
-                        onMouseLeave={() => {
-                            if (resizingEvent.item) {
-                                return;
-                            }
-                            clearTimeout(hoverHandlerRef.current);
-                            hoverHandlerRef.current = setTimeout(() => {
-                                setHover(null);
-                            }, 500);
-                        }}
-                        style={{
-                            minWidth: `calc(${width}% - 16px)`,
-                            left: `${left}%`,
-                            backgroundColor: event.color,
-                        }}
-                    >
-                        <div
-                            className={styles.startHandlerResize}
-                            onMouseDown={(e) => startResize(event, 'start')}
-                        >
-                            start
-                        </div>
-                        {editing && editing.id === event.id ? (
-                            <input
-                                className={styles.fieldEditor}
-                                value={event.name}
-                                onClick={(e) => e.stopPropagation()}
-                                onChange={(e) => {
-                                    dispatch(
-                                        changeName({
-                                            event: editing,
-                                            name: e.target.value,
-                                        })
-                                    );
-                                }}
-                            />
-                        ) : (
-                            <div
-                                onDoubleClick={() => {
-                                    document.addEventListener(
-                                        'click',
-                                        handleCloseEdit
-                                    );
-                                    setEditing(event);
-                                }}
-                            >
-                                {event.name}
-                            </div>
-                        )}
-                        <div
-                            className={styles.endHandlerResize}
-                            onMouseDown={(e) => startResize(event, 'end')}
-                        >
-                            end
-                        </div>
-                    </div>
-                );
-            })}
+            <div style={{ overflow: 'hidden', width: '100%' }}>
+                <ul className={styles.laneList}>
+                    {Array.from(
+                        { length: currMonth.daysInMonth },
+                        (_, index) => index
+                    ).map((index) => (
+                        <li className={styles.laneDay} key={index}>
+                            {getAllLaneItems(index + 1)}
+                        </li>
+                    ))}
+                </ul>
+            </div>
             {resizingEvent.item && (
                 <div
                     className={styles.resizeOverlay}
@@ -167,5 +149,87 @@ export const Events = () => {
             )}
             <Tooltip id="my-tooltip" />
         </>
+    );
+};
+
+declare type LaneItemProps = {
+    event: TimelineItem;
+    currMonth: {
+        index: number;
+        daysInMonth: number;
+    };
+    hoverItem: TimelineItem | null | undefined;
+    editing: TimelineItem | null | undefined;
+    handleMouseEnter: (event: TimelineItem) => void;
+    handleMouseLeave: (event: React.MouseEvent) => void;
+    handleStartEditItem: (event: TimelineItem) => void;
+    handleResize: (event: TimelineItem, pos: 'start' | 'end' | null) => void;
+    handleChangeName: (event: TimelineItem, name: string) => void;
+};
+
+const LaneItem = ({
+    event,
+    currMonth,
+    hoverItem,
+    editing,
+    handleMouseEnter,
+    handleMouseLeave,
+    handleResize,
+    handleStartEditItem,
+    handleChangeName,
+}: LaneItemProps) => {
+    const calculateWidth = () => {
+        const startDate = moment(event.start, 'YYYY-MM-DD');
+        const endDate = moment(event.end, 'YYYY-MM-DD');
+        let duration = endDate.diff(startDate, 'days') + 1;
+        if (duration > currMonth.daysInMonth) {
+            duration = currMonth.daysInMonth - startDate.date() + 1;
+        }
+        return (duration / currMonth.daysInMonth) * 100;
+    };
+
+    return (
+        <div
+            data-tooltip-id="my-tooltip"
+            data-tooltip-html={`<div>${event.name}</div><div>${event.start} / ${event.end}</div>`}
+            key={event.id}
+            className={`${styles.event} ${
+                (hoverItem && hoverItem.id === event.id) ||
+                (editing && editing.id === event.id)
+                    ? styles.hover
+                    : null
+            }`}
+            onMouseEnter={() => handleMouseEnter(event)}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                minWidth: `calc(${calculateWidth()}% - 16px)`,
+                backgroundColor: event.color,
+            }}
+        >
+            <div
+                className={styles.startHandlerResize}
+                onMouseDown={(e) => handleResize(event, 'start')}
+            >
+                start
+            </div>
+            {editing && editing.id === event.id ? (
+                <input
+                    className={styles.fieldEditor}
+                    value={event.name}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => handleChangeName(event, e.target.value)}
+                />
+            ) : (
+                <div onDoubleClick={() => handleStartEditItem(event)}>
+                    {event.name}
+                </div>
+            )}
+            <div
+                className={styles.endHandlerResize}
+                onMouseDown={(e) => handleResize(event, 'end')}
+            >
+                end
+            </div>
+        </div>
     );
 };

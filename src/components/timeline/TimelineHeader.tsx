@@ -13,10 +13,9 @@ export const TimelineHeader = () => {
         dispatch(changeMonth(index));
     };
     const MONTH = months[currMonth.index];
-    const WIDTH = window.screen.width / currMonth.daysInMonth;
 
     return (
-        <div className={styles.monthContainer}>
+        <div className={styles.headerContainer}>
             <div className={styles.month}>
                 <span
                     className={
@@ -45,13 +44,7 @@ export const TimelineHeader = () => {
                     { length: currMonth.daysInMonth },
                     (_, index) => index
                 ).map((index) => (
-                    <li
-                        className={styles.day}
-                        key={index}
-                        style={{
-                            width: `${WIDTH}px`,
-                        }}
-                    >
+                    <li className={styles.day} key={index}>
                         {index + 1}
                     </li>
                 ))}
