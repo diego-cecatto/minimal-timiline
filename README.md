@@ -6,7 +6,25 @@ The component is also responsive, suitable for use on mobile, tablet, and deskto
 
 To get started run
 
+    npm install
     npm run start
+
+## Pattern
+
+This pattern is not only to present a single component but is also prepared to recieve anothers pages. The idea is to have a component that can be used in different projects and can be easily maintained.
+Under actions you can found the follow structure
+
+src <br/>
+|\_\_ actions <br/>
+|\_\_components<br/>
+|\_\_ config<br/>
+|\_\_pages<br/>
+
+src <br/>
+|\_\_ actions :: there is stored all actions to interact with backend, I created a mock action <br/>
+|\_\_components :: there is stored all components that can be used in different pages<br/>
+|\_\_ config :: there is stored all configurations that can be used in different pages <br/>
+|\_\_pages :: there is all pages from your website.<br/>
 
 ## Duration
 
@@ -16,7 +34,7 @@ This project took me approximately 8 hours
 -   Approximately 2 hours were dedicated to basic development.
 -   The remaining 5 hours were focused on improvements, including the addition of various levels of difficulty:
     -   Implemented a resizer
-        ![alt text](/src/doc/resizable.png)
+        ![alt text](/design/resizable.png)
     -   Added drag and drop functionality.
     -   Enhanced color schemes for color-blind users.
     -   Implemented Redux for state management. Additionally, there is a branch with the same implementation using reducers.
