@@ -4,7 +4,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useDispatch, useSelector } from 'react-redux';
 import { TimelineState, changeMonth } from './Timeline.slice';
 
-export const TimelineHeader = () => {
+export const TimelineHeader = ({ zoom }: any) => {
     const dispatch = useDispatch();
     const { months, currMonth }: TimelineState = useSelector(
         (state: any) => state.timeline
@@ -39,7 +39,14 @@ export const TimelineHeader = () => {
                     <NavigateNextIcon />
                 </span>
             </div>
-            <ul className={styles.dayList}>
+            <ul
+                className={styles.dayList}
+                style={{
+                    width: `${zoom}px`,
+                    overflow: 'hidden',
+                    overflowY: 'hidden',
+                }}
+            >
                 {Array.from(
                     { length: currMonth.daysInMonth },
                     (_, index) => index

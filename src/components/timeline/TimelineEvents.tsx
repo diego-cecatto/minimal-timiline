@@ -76,7 +76,7 @@ export const Events = () => {
         clearTimeout(hoverHandlerRef.current);
         hoverHandlerRef.current = setTimeout(() => {
             setHover(event);
-        }, 300);
+        }, 250);
     };
 
     const handleMouseLeave = (event: React.MouseEvent) => {
@@ -86,7 +86,7 @@ export const Events = () => {
         clearTimeout(hoverHandlerRef.current);
         hoverHandlerRef.current = setTimeout(() => {
             setHover(null);
-        }, 500);
+        }, 300);
     };
     const handleStartEditItem = (event: Appontment) => {
         document.addEventListener('click', handleCloseEdit);
@@ -132,7 +132,7 @@ export const Events = () => {
                         handleResize={startResize}
                         handleStartEditItem={handleStartEditItem}
                         handleChangeName={handleChangeName}
-                        handleDragStart={(event: Appontment | null) => {
+                        handleDrag={(event: Appontment | null) => {
                             setHover(event);
                             setDraggin(event);
                         }}

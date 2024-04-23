@@ -1,7 +1,6 @@
 //todo implement compass
 //todo create documentation
 //todo if I have other in the same position do some process to put a lit bit left
-//todo add zoom
 //todo break text in the middle of the word
 
 //todo include elements that have started in the previous month
@@ -16,6 +15,16 @@ v 2.0.0
 //todo add a button to add a new event
 //todo add a button to delete an event
 
-//improvments
+//IMPROVMENTS
+
+//DRAG & DROP
 //todo on drag change cursor
-//todo keep the apointment at first z-index when dragging
+//drag to the corner is getting more bigger than structure allows
+//todo when are dragging not show trigger events like tooltip
+
+//ZOOM IN - ZOOM OUT
+//todo zoom in and zoom out
+//todo when are zooming not show trigger events like drag and resize and tooltip
+//add limit to zoom in and zoom out
+//todo start zoom in 100%
+//todo add reset zoom feature

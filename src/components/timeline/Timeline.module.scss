@@ -26,8 +26,8 @@ body {
 
             .dropZone {
                 position: absolute;
-                height: 28px;
-                top: 17px;
+                height: 80px;
+                top: 8px;
                 z-index: -1;
                 &.active {
                     z-index: 1;
@@ -45,13 +45,13 @@ body {
 
         &.hover {
             z-index: 2;
-            cursor: pointer;
+            cursor: grabbing;
         }
 
         &.dragging {
             z-index: 1;
             position: absolute;
-            cursor: pointer;
+            cursor: grabbing !important;
         }
 
         .fieldEditor {
@@ -132,4 +132,16 @@ body {
     width: 1px;
     height: 1px;
     overflow: hidden;
+}
+
+.buttonsContainer {
+    text-align: right;
+
+    .actionButtons {
+        background-color: #f9f9f9;
+        cursor: pointer;
+        margin-left: 10px;
+        padding: 4px 8px;
+        border-radius: 5px;
+    }
 }

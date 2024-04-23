@@ -16,7 +16,7 @@ declare type LaneItemProps = {
     handleStartEditItem: (event: Appontment) => void;
     handleResize: (event: Appontment, pos: 'start' | 'end' | null) => void;
     handleChangeName: (event: Appontment, name: string) => void;
-    handleDragStart: (event: Appontment | null) => void;
+    handleDrag: (event: Appontment | null) => void;
 };
 
 export const TimelineItem = ({
@@ -30,7 +30,7 @@ export const TimelineItem = ({
     handleResize,
     handleStartEditItem,
     handleChangeName,
-    handleDragStart,
+    handleDrag,
 }: LaneItemProps) => {
     const calculateWidth = () => {
         const startDate = moment(event.start, 'YYYY-MM-DD');
@@ -42,12 +42,13 @@ export const TimelineItem = ({
         return (duration / currMonth.daysInMonth) * 100;
     };
 
-    const handleDrag = (e: React.DragEvent) => {
+    const handleDragStart = (e: React.DragEvent) => {
         e.dataTransfer.effectAllowed = 'move';
         const invisibleImage = new Image();
         invisibleImage.src =
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABFJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=';
         e.dataTransfer.setDragImage(invisibleImage, 0, 0);
+        e.dataTransfer.dropEffect = 'move';
     };
     const CLASS_NAME = `${styles.event} ${
         (hoverItem && hoverItem.id === event.id) ||
@@ -55,7 +56,7 @@ export const TimelineItem = ({
             ? styles.hover
             : null
     } ${dragginItem && dragginItem.id === event.id ? styles.dragging : ''}`;
-    console.log(dragginItem?.id, event.id, dragginItem?.id === event.id);
+
     return (
         <div
             data-tooltip-id="my-tooltip"
@@ -63,16 +64,12 @@ export const TimelineItem = ({
             data-tooltip-html={`<div>${event.name}</div><div>${event.start} / ${event.end}</div>`}
             key={event.id}
             className={CLASS_NAME}
-            onDragStart={handleDrag}
+            onDragStart={handleDragStart}
             onDrag={(e) => {
-                handleDragStart(event);
+                handleDrag(event);
             }}
-            onDragExit={() => {
-                handleDragStart(null);
-            }}
-            onDragEnd={() => {
-                handleDragStart(null);
-            }}
+            onDragExit={() => handleDrag(null)}
+            onDragEnd={() => handleDrag(null)}
             onMouseEnter={() => handleMouseEnter(event)}
             onMouseLeave={handleMouseLeave}
             style={{
