@@ -20,7 +20,6 @@ export const Events = () => {
         propName: 'start' | 'end' | null;
     }>({ item: null, propName: null });
 
-    const resizerHandlerRef = useRef<any>(null);
     const hoverHandlerRef = useRef<any>(null);
     const dragHandlerRef = useRef<any>(null);
 
@@ -41,20 +40,17 @@ export const Events = () => {
     };
 
     const resize = (event: React.MouseEvent) => {
-        clearInterval(resizerHandlerRef.current);
-        resizerHandlerRef.current = setTimeout(() => {
-            const INDIVIDUAL_SIZE =
-                window.innerWidth / currMonth.daysInMonth -
-                16 / currMonth.daysInMonth;
-            const DAYS = Math.floor(event.clientX / INDIVIDUAL_SIZE);
-            dispatch(
-                changeDay({
-                    event: resizingEvent.item!,
-                    propName: resizingEvent.propName!,
-                    days: DAYS,
-                })
-            );
-        }, 3);
+        const INDIVIDUAL_SIZE =
+            window.innerWidth / currMonth.daysInMonth -
+            16 / currMonth.daysInMonth;
+        const DAYS = Math.floor(event.clientX / INDIVIDUAL_SIZE);
+        dispatch(
+            changeDay({
+                event: resizingEvent.item!,
+                propName: resizingEvent.propName!,
+                days: DAYS,
+            })
+        );
     };
 
     const stopResize = () => {
@@ -105,6 +101,19 @@ export const Events = () => {
             })
         );
     };
+
+    const onDragHover = (e: React.DragEvent, index: number) => {
+        clearTimeout(dragHandlerRef.current);
+        dragHandlerRef.current = setTimeout(() => {
+            dispatch(
+                changeInterval({
+                    event: dragging!,
+                    day: index + 1,
+                })
+            );
+        }, 1);
+        e.preventDefault();
+    };
     const MONTH = months[currMonth.index];
     let currIndex = 0;
     const getAllLaneItems = (day: number) => {
@@ -117,6 +126,7 @@ export const Events = () => {
                         currMonth={currMonth}
                         editing={editing}
                         hoverItem={hoverItem}
+                        dragginItem={dragging}
                         handleMouseEnter={handleMouseEnter}
                         handleMouseLeave={handleMouseLeave}
                         handleResize={startResize}
@@ -150,28 +160,26 @@ export const Events = () => {
                         <li
                             className={styles.laneDay}
                             style={{
-                                zIndex: dragging ? 100 : 'inherit',
                                 width: `${100 / currMonth.daysInMonth}%`,
                             }}
                             key={index}
-                            onDragOver={(e) => {
-                                clearTimeout(dragHandlerRef.current);
-                                dragHandlerRef.current = setTimeout(() => {
-                                    dispatch(
-                                        changeInterval({
-                                            event: dragging!,
-                                            day: index + 1,
-                                        })
-                                    );
-                                }, 1);
-                                e.preventDefault();
-                            }}
+                            onDragOver={(e) => onDragHover(e, index)}
                             onDrop={(e) => {
                                 e.stopPropagation();
                                 setDraggin(null);
                             }}
                         >
                             {getAllLaneItems(index + 1)}
+                            <div
+                                className={`${styles.dropZone} ${
+                                    dragging ? styles.active : ''
+                                }`}
+                                style={{
+                                    width: `${100 / currMonth.daysInMonth}%`,
+                                }}
+                            >
+                                &nbsp;
+                            </div>
                         </li>
                     ))}
                 </ul>

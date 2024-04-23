@@ -23,6 +23,16 @@ body {
         .laneDay {
             list-style: none;
             height: 28px;
+
+            .dropZone {
+                position: absolute;
+                height: 28px;
+                top: 17px;
+                z-index: -1;
+                &.active {
+                    z-index: 1;
+                }
+            }
         }
     }
 
@@ -34,7 +44,13 @@ body {
         border: 1px dashed white;
 
         &.hover {
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        &.dragging {
             z-index: 1;
+            position: absolute;
             cursor: pointer;
         }
 

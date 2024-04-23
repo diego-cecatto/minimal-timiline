@@ -9,6 +9,7 @@ declare type LaneItemProps = {
         daysInMonth: number;
     };
     hoverItem: Appontment | null | undefined;
+    dragginItem: Appontment | null | undefined;
     editing: Appontment | null | undefined;
     handleMouseEnter: (event: Appontment) => void;
     handleMouseLeave: (event: React.MouseEvent) => void;
@@ -23,6 +24,7 @@ export const TimelineItem = ({
     currMonth,
     hoverItem,
     editing,
+    dragginItem,
     handleMouseEnter,
     handleMouseLeave,
     handleResize,
@@ -52,8 +54,8 @@ export const TimelineItem = ({
         (editing && editing.id === event.id)
             ? styles.hover
             : null
-    }`;
-
+    } ${dragginItem && dragginItem.id === event.id ? styles.dragging : ''}`;
+    console.log(dragginItem?.id, event.id, dragginItem?.id === event.id);
     return (
         <div
             data-tooltip-id="my-tooltip"

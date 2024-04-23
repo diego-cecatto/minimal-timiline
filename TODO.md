@@ -15,3 +15,7 @@ v 2.0.0
 //todo create icon to edit in a modal to go to the month that user want to edit
 //todo add a button to add a new event
 //todo add a button to delete an event
+
+//improvments
+//todo on drag change cursor
+//todo keep the apointment at first z-index when dragging
