@@ -11,8 +11,9 @@ To get started run
 
 ## Pattern
 
-This pattern is not only to present a single component but is also prepared to recieve anothers pages. The idea is to have a component that can be used in different projects and can be easily maintained.
-Under actions you can found the follow structure
+This pattern is not only designed to present a single component but is also prepared to receive other pages. The idea is that if your website grows in the future, you can use this pattern to create new pages.
+
+### Folder structure
 
 src <br/>
 |\_\_ actions <br/>
@@ -21,10 +22,10 @@ src <br/>
 |\_\_pages<br/>
 
 src <br/>
-|\_\_ actions :: there is stored all actions to interact with backend, I created a mock action <br/>
-|\_\_components :: there is stored all components that can be used in different pages<br/>
-|\_\_ config :: there is stored all configurations that can be used in different pages <br/>
-|\_\_pages :: there is all pages from your website.<br/>
+|\_\_ actions :: actions classes to call backend endpoints, I created a mock action <br/>
+|\_\_components :: components that can be used in different pages<br/>
+|\_\_ config :: configurations, including the redux store <br/>
+|\_\_pages :: All pages from your website, its like a same that you can found in a next.js project.<br/>
 
 ## Duration
 
