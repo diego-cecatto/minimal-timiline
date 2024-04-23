@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { TimelineItem } from '../../actions/timeline/timeline.mock.ation';
+import { Appontment } from '../../actions/timeline/timeline.mock.ation';
 
 const COLORBLIND_FRIENLY_PALLETE: string[] = [
     '#444444',
@@ -33,8 +33,8 @@ export function getDaysInMonth(dateStr: string): number {
 }
 
 export function reorderTimelineItemsByStartAndDuration(
-    items: TimelineItem[]
-): TimelineItem[] {
+    items: Appontment[]
+): Appontment[] {
     items.sort((a, b) => {
         const startA = moment(a.start);
         const startB = moment(b.start);
