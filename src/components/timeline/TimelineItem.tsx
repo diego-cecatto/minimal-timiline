@@ -50,6 +50,7 @@ export const TimelineItem = ({
         e.dataTransfer.setDragImage(invisibleImage, 0, 0);
         e.dataTransfer.dropEffect = 'move';
     };
+
     const CLASS_NAME = `${styles.event} ${
         (hoverItem && hoverItem.id === event.id) ||
         (editing && editing.id === event.id)

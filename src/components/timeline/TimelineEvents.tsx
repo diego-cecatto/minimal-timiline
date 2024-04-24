@@ -11,7 +11,7 @@ import {
 } from './Timeline.slice';
 import { TimelineItem } from './TimelineItem';
 
-export const Events = () => {
+export const Events = ({ width, month }: any) => {
     const [editing, setEditing] = useState<Appontment | null>();
     const [hoverItem, setHover] = useState<Appontment | null>();
     const [dragging, setDraggin] = useState<Appontment | null>();
@@ -114,7 +114,7 @@ export const Events = () => {
         }, 1);
         e.preventDefault();
     };
-    const MONTH = months[currMonth.index];
+    const MONTH = months[month];
     let currIndex = 0;
     const getAllLaneItems = (day: number) => {
         var laneItems = [];
@@ -151,7 +151,7 @@ export const Events = () => {
 
     return (
         <>
-            <div style={{ overflow: 'hidden', width: '100%' }}>
+            <div className={styles.eventsList} style={{ width: `${width}px` }}>
                 <ul className={styles.laneList}>
                     {Array.from(
                         { length: currMonth.daysInMonth },

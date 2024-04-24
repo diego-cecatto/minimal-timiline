@@ -27,29 +27,33 @@ export const Timeline = ({ events }: TimelineProps) => {
     };
     const handleScroll = (event: any) => {
         if (event.deltaY > 0) {
-            handleZoomIn();
-        } else {
             handleZoomOut();
+        } else {
+            handleZoomIn();
         }
     };
 
     return (
         <>
-            <div style={{ overflow: 'hidden' }} onWheel={handleScroll}>
-                <TimelineHeader zoom={width} />
-                <div
-                    style={{
-                        width: `${width}px`,
-                        overflow: 'hidden',
-                        overflowY: 'hidden',
-                        transition: 'transform 0.1s ease',
-                    }}
-                >
-                    <div className={styles.timelineContainer}>
-                        <Events />
-                    </div>
+            <div
+                style={{ overflow: 'hidden' }}
+                onWheel={handleScroll}
+                className={styles.timelineContainer}
+            >
+                <div style={{ width }} className={styles.timelineContainerItem}>
+                    <TimelineHeader month={0} />
+                    <Events month={0} />
+                </div>
+                <div style={{ width }} className={styles.timelineContainerItem}>
+                    <TimelineHeader month={1} />
+                    <Events month={1} />
+                </div>
+                <div style={{ width }} className={styles.timelineContainerItem}>
+                    <TimelineHeader month={2} />
+                    <Events month={2} />
                 </div>
             </div>
+
             <div className={styles.buttonsContainer}>
                 {showReset && (
                     <button

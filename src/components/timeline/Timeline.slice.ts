@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { TimelineItem } from '../../actions/timeline/timeline.mock.ation';
+import { Appontment } from '../../actions/timeline/timeline.mock.ation';
 import moment from 'moment';
 import {
     getColorFromIndex,
@@ -21,12 +21,12 @@ export declare type TimelineMonth = {
         | 'October'
         | 'November'
         | 'December';
-    events: TimelineItem[];
+    events: Appontment[];
 };
 
 export declare type TimelineState = {
     months: TimelineMonth[];
-    events: TimelineItem[];
+    events: Appontment[];
     currMonth: {
         index: number;
         daysInMonth: number;
