@@ -126,6 +126,7 @@ export const Events = ({ monthIndex }: MonthProps) => {
             if (Number(MONTH.events[i].start.slice(8)) === day) {
                 laneItems.push(
                     <TimelineItem
+                        key={MONTH.events[i].id}
                         event={MONTH.events[i]}
                         currMonth={monthIndex}
                         editing={editing}

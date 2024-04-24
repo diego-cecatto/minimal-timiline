@@ -32,6 +32,7 @@ fixes
 //todo organize layout
 //todo organize code
 //todo odd and even between months
+//todo align text in left of events
 
 v 2.0.0
 //todo create icon to edit in a modal to go to the month that user want to edit

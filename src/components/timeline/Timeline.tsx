@@ -77,7 +77,8 @@ export const Timeline = ({ events }: TimelineProps) => {
 
                 {months.map((month, index) => (
                     <div
-                        style={{ width }}
+                        style={{ width, zIndex: months.length - index }}
+                        key={index}
                         className={styles.timelineContainerItem}
                     >
                         <TimelineHeader monthIndex={index} />
