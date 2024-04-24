@@ -27,6 +27,12 @@ fixes
 //INTERACTION
 //todo add next and prev at the end and beggining of the timeline
 
+//GENERAL
+//todo organize SCSS
+//todo organize layout
+//todo organize code
+//todo odd and even between months
+
 v 2.0.0
 //todo create icon to edit in a modal to go to the month that user want to edit
 //todo add a button to add a new event

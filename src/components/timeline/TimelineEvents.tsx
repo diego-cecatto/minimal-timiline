@@ -11,7 +11,11 @@ import {
 } from './Timeline.slice';
 import { TimelineItem } from './TimelineItem';
 
-export const Events = ({ width, month }: any) => {
+declare type MonthProps = {
+    monthIndex: number;
+};
+
+export const Events = ({ monthIndex }: MonthProps) => {
     const [editing, setEditing] = useState<Appontment | null>();
     const [hoverItem, setHover] = useState<Appontment | null>();
     const [dragging, setDraggin] = useState<Appontment | null>();
@@ -24,7 +28,7 @@ export const Events = ({ width, month }: any) => {
     const dragHandlerRef = useRef<any>(null);
 
     const dispatch = useDispatch();
-    const { months, currMonth }: TimelineState = useSelector(
+    const { months }: TimelineState = useSelector(
         (state: any) => state.timeline
     );
 
@@ -41,8 +45,8 @@ export const Events = ({ width, month }: any) => {
 
     const resize = (event: React.MouseEvent) => {
         const INDIVIDUAL_SIZE =
-            window.innerWidth / currMonth.daysInMonth -
-            16 / currMonth.daysInMonth;
+            window.innerWidth / months[monthIndex].totalDays -
+            16 / months[monthIndex].totalDays;
         const DAYS = Math.floor(event.clientX / INDIVIDUAL_SIZE);
         dispatch(
             changeDay({
@@ -114,7 +118,7 @@ export const Events = ({ width, month }: any) => {
         }, 1);
         e.preventDefault();
     };
-    const MONTH = months[month];
+    const MONTH = months[monthIndex];
     let currIndex = 0;
     const getAllLaneItems = (day: number) => {
         var laneItems = [];
@@ -123,7 +127,7 @@ export const Events = ({ width, month }: any) => {
                 laneItems.push(
                     <TimelineItem
                         event={MONTH.events[i]}
-                        currMonth={currMonth}
+                        currMonth={monthIndex}
                         editing={editing}
                         hoverItem={hoverItem}
                         dragginItem={dragging}
@@ -151,16 +155,16 @@ export const Events = ({ width, month }: any) => {
 
     return (
         <>
-            <div className={styles.eventsList} style={{ width: `${width}px` }}>
+            <div className={styles.eventsList}>
                 <ul className={styles.laneList}>
                     {Array.from(
-                        { length: currMonth.daysInMonth },
+                        { length: MONTH.totalDays },
                         (_, index) => index
                     ).map((index) => (
                         <li
                             className={styles.laneDay}
                             style={{
-                                width: `${100 / currMonth.daysInMonth}%`,
+                                width: `${100 / MONTH.totalDays}%`,
                             }}
                             key={index}
                             onDragOver={(e) => onDragHover(e, index)}
@@ -175,7 +179,7 @@ export const Events = ({ width, month }: any) => {
                                     dragging ? styles.active : ''
                                 }`}
                                 style={{
-                                    width: `${100 / currMonth.daysInMonth}%`,
+                                    width: `${100 / MONTH.totalDays}%`,
                                 }}
                             >
                                 &nbsp;

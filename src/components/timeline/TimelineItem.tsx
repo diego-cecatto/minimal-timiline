@@ -4,10 +4,7 @@ import styles from './Timeline.module.scss';
 
 declare type LaneItemProps = {
     event: Appontment;
-    currMonth: {
-        index: number;
-        daysInMonth: number;
-    };
+    currMonth: number;
     hoverItem: Appontment | null | undefined;
     dragginItem: Appontment | null | undefined;
     editing: Appontment | null | undefined;
@@ -36,10 +33,8 @@ export const TimelineItem = ({
         const startDate = moment(event.start, 'YYYY-MM-DD');
         const endDate = moment(event.end, 'YYYY-MM-DD');
         let duration = endDate.diff(startDate, 'days') + 1;
-        if (duration > currMonth.daysInMonth) {
-            duration = currMonth.daysInMonth - startDate.date() + 1;
-        }
-        return (duration / currMonth.daysInMonth) * 100;
+        const REPALCe = 31;
+        return (duration / REPALCe) * 100;
     };
 
     const handleDragStart = (e: React.DragEvent) => {
