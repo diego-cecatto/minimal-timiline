@@ -8,6 +8,7 @@ import {
     changeDay,
     changeInterval,
     changeName,
+    dragElement,
 } from './Timeline.slice';
 import { TimelineItem } from './TimelineItem';
 
@@ -18,7 +19,7 @@ declare type MonthProps = {
 export const Events = ({ monthIndex }: MonthProps) => {
     const [editing, setEditing] = useState<Appontment | null>();
     const [hoverItem, setHover] = useState<Appontment | null>();
-    const [dragging, setDraggin] = useState<Appontment | null>();
+    // const [dragging, setDraggin] = useState<Appontment | null>();
     const [resizingEvent, setResizingEvent] = useState<{
         item: Appontment | null;
         propName: 'start' | 'end' | null;
@@ -28,7 +29,7 @@ export const Events = ({ monthIndex }: MonthProps) => {
     const dragHandlerRef = useRef<any>(null);
 
     const dispatch = useDispatch();
-    const { months }: TimelineState = useSelector(
+    const { months, dragging }: TimelineState = useSelector(
         (state: any) => state.timeline
     );
 
@@ -112,6 +113,7 @@ export const Events = ({ monthIndex }: MonthProps) => {
             dispatch(
                 changeInterval({
                     event: dragging!,
+                    month: monthIndex + 1,
                     day: index + 1,
                 })
             );
@@ -139,7 +141,7 @@ export const Events = ({ monthIndex }: MonthProps) => {
                         handleChangeName={handleChangeName}
                         handleDrag={(event: Appontment | null) => {
                             setHover(event);
-                            setDraggin(event);
+                            dispatch(dragElement(event));
                         }}
                     />
                 );
@@ -171,7 +173,7 @@ export const Events = ({ monthIndex }: MonthProps) => {
                             onDragOver={(e) => onDragHover(e, index)}
                             onDrop={(e) => {
                                 e.stopPropagation();
-                                setDraggin(null);
+                                dispatch(dragElement(null));
                             }}
                         >
                             {getAllLaneItems(index + 1)}

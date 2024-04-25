@@ -29,12 +29,14 @@ export declare type TimelineState = {
     months: TimelineMonth[];
     events: Appontment[];
     monthIndex: number;
+    dragging?: Appontment | null;
 };
 
 const INITIAL_STATE: TimelineState = {
     monthIndex: 0,
     events: [],
     months: [],
+    dragging: null,
 };
 
 const timelineReducer = createSlice({
@@ -114,28 +116,42 @@ const timelineReducer = createSlice({
             return state;
         },
         changeInterval: (state, action) => {
-            const { event, day } = action.payload;
-            var MONTH = state.months[state.monthIndex];
+            const { event, day, month } = action.payload;
+            const start = moment(event.start, 'YYYY-MM-DD');
+            var MONTH = state.months[start.month()];
+            console.log(start.month(), event.start);
             const EV_INDEX = MONTH.events.findIndex((e) => {
                 return e.id === event.id;
             });
             if (EV_INDEX === -1) {
                 return state;
             }
-            const start = moment(event.start, 'YYYY-MM-DD');
             const newStart = moment(
-                event.start.slice(0, 8) + day,
+                start.year() + '-' + month + '-' + day,
                 'YYYY-MM-DD'
             );
             var diff = start.diff(newStart, 'days');
             const end = moment(event.end, 'YYYY-MM-DD');
             const newEnd = moment(end).subtract(diff, 'days');
-            MONTH.events[EV_INDEX] = {
+            const NEW_EVENT_DATE = {
                 ...event,
                 start: newStart.format('YYYY-MM-DD'),
                 end: newEnd.format('YYYY-MM-DD'),
             };
-            MONTH.events = reorderTimelineItemsByStartAndDuration(MONTH.events);
+            if (start.month() === month - 1) {
+                MONTH.events[EV_INDEX] = NEW_EVENT_DATE;
+                MONTH.events = reorderTimelineItemsByStartAndDuration(
+                    MONTH.events
+                );
+            } else {
+                MONTH.events.splice(EV_INDEX, 1);
+                state.months[newStart.month()].events =
+                    reorderTimelineItemsByStartAndDuration([
+                        ...state.months[newStart.month()].events,
+                        NEW_EVENT_DATE,
+                    ]);
+            }
+            state.dragging = NEW_EVENT_DATE;
             return state;
         },
         changeMonth: (state, action) => {
@@ -158,9 +174,19 @@ const timelineReducer = createSlice({
             MONTH.events[EV_INDEX].name = name;
             return state;
         },
+        dragElement: (state, action) => {
+            state.dragging = action.payload;
+            return state;
+        },
     },
 });
-export const { changeName, changeDay, changeMonth, init, changeInterval } =
-    timelineReducer.actions;
+export const {
+    changeName,
+    changeDay,
+    changeMonth,
+    init,
+    changeInterval,
+    dragElement,
+} = timelineReducer.actions;
 
 export default timelineReducer.reducer;
