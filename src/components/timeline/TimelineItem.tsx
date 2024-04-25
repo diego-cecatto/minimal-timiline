@@ -4,21 +4,22 @@ import styles from './Timeline.module.scss';
 
 declare type LaneItemProps = {
     event: Appontment;
-    currMonth: number;
     hoverItem: Appontment | null | undefined;
     dragginItem: Appontment | null | undefined;
     editing: Appontment | null | undefined;
     handleMouseEnter: (event: Appontment) => void;
     handleMouseLeave: (event: React.MouseEvent) => void;
     handleStartEditItem: (event: Appontment) => void;
-    handleResize: (event: Appontment, pos: 'start' | 'end' | null) => void;
+    handleResize: (
+        event: Appontment | null,
+        pos: 'start' | 'end' | null
+    ) => void;
     handleChangeName: (event: Appontment, name: string) => void;
     handleDrag: (event: Appontment | null) => void;
 };
 
 export const TimelineItem = ({
     event,
-    currMonth,
     hoverItem,
     editing,
     dragginItem,
@@ -64,6 +65,7 @@ export const TimelineItem = ({
             onDrag={(e) => {
                 handleDrag(event);
             }}
+            onDrop={() => handleDrag(null)}
             onDragExit={() => handleDrag(null)}
             onDragEnd={() => handleDrag(null)}
             onMouseEnter={() => handleMouseEnter(event)}
@@ -75,7 +77,11 @@ export const TimelineItem = ({
         >
             <div
                 className={styles.startHandlerResize}
-                onMouseDown={(e) => handleResize(event, 'start')}
+                onMouseDown={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleResize(event, 'start');
+                }}
             >
                 &nbsp;
             </div>
@@ -93,7 +99,11 @@ export const TimelineItem = ({
             )}
             <div
                 className={styles.endHandlerResize}
-                onMouseDown={(e) => handleResize(event, 'end')}
+                onMouseDown={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleResize(event, 'end');
+                }}
             >
                 &nbsp;
             </div>

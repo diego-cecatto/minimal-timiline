@@ -10,6 +10,7 @@ fixes
 //DRAG & DROP
 //todo on drag change cursor
 //todo when are dragging not show trigger events like tooltip
+//todo if is resizing the not resize less than the size of the element
 
 //ZOOM IN - ZOOM OUT
 //todo when are zooming not show trigger events like drag and resize and tooltip

@@ -87,10 +87,8 @@ const timelineReducer = createSlice({
             return state;
         },
         changeDay: (state, action) => {
-            let { event, propName, days } = action.payload;
-            if (days < 0) {
-                days = 0;
-            }
+            let { event, propName, day, month } = action.payload;
+            console.log(event, propName, day, month);
             var MONTH = state.months[state.monthIndex];
             const EV_INDEX = MONTH.events.findIndex((e) => {
                 return e.id === event.id;
@@ -98,28 +96,28 @@ const timelineReducer = createSlice({
             if (EV_INDEX === -1) {
                 return state;
             }
-            const date = moment(
-                event[propName].slice(0, 5) +
-                    (state.monthIndex + 1) +
-                    '-' +
-                    (days + 1),
-                'YYYY-MM-DD'
-            );
-            MONTH.events[EV_INDEX] = {
+            var currDate = moment(event[propName]);
+            const NEW_EVENT = {
                 ...event,
-                [propName]: date.format('YYYY-MM-DD'),
+                [propName]: moment(`${currDate.year()}-${month}-${day}`).format(
+                    'YYYY-MM-DD'
+                ),
             };
+            // const date = moment(
+            //     event[propName].slice(0, 5) +
+            //         (state.monthIndex + 1) +
+            //         '-' +
+            //         (days + 1),
+            //     'YYYY-MM-DD'
+            // );
+            MONTH.events[EV_INDEX] = NEW_EVENT;
             MONTH.events = reorderTimelineItemsByStartAndDuration(MONTH.events);
-            // MONTH.events.forEach((item, index) => {
-            //     item.color = getColorFromIndex(index);
-            // });
             return state;
         },
         changeInterval: (state, action) => {
             const { event, day, month } = action.payload;
             const start = moment(event.start, 'YYYY-MM-DD');
             var MONTH = state.months[start.month()];
-            console.log(start.month(), event.start);
             const EV_INDEX = MONTH.events.findIndex((e) => {
                 return e.id === event.id;
             });
@@ -175,6 +173,7 @@ const timelineReducer = createSlice({
             return state;
         },
         dragElement: (state, action) => {
+            console.log('dragElement');
             state.dragging = action.payload;
             return state;
         },
