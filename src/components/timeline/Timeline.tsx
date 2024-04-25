@@ -6,34 +6,32 @@ import { useState } from 'react';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useDispatch, useSelector } from 'react-redux';
-import { TimelineState, changeMonth } from './Timeline.slice';
+import { TimelineState, changeMonth, changeZoom } from './Timeline.slice';
 
 declare type TimelineProps = {
     events: Appontment[];
 };
 
 export const Timeline = ({ events }: TimelineProps) => {
-    const [width, setWidth] = useState(window.innerWidth);
     const [showReset, setShowReset] = useState(false);
-    const { monthIndex, months }: TimelineState = useSelector(
+    const { monthIndex, months, screen }: TimelineState = useSelector(
         (state: any) => state.timeline
     );
-
     const dispatch = useDispatch();
     const handleChangeMonth = (index: number) => {
         dispatch(changeMonth(index));
     };
     const handleZoomIn = () => {
-        setWidth((prevWidth) => prevWidth + 50);
+        dispatch(changeZoom(screen.width + 50));
         setShowReset(true);
     };
 
     const handleZoomOut = () => {
-        setWidth((prevWidth) => prevWidth - 50);
+        dispatch(changeZoom(screen.width - 50));
         setShowReset(true);
     };
     const handleReset = () => {
-        setWidth(window.innerWidth);
+        dispatch(changeZoom(window.innerWidth));
         setShowReset(false);
     };
     const handleScroll = (event: any) => {
@@ -77,7 +75,7 @@ export const Timeline = ({ events }: TimelineProps) => {
 
                 {months.map((month, index) => (
                     <div
-                        style={{ width }}
+                        style={{ width: `${screen.width}px` }}
                         key={index}
                         className={styles.timelineContainerItem}
                     >

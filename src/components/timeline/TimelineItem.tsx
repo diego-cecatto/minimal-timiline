@@ -33,9 +33,15 @@ export const TimelineItem = ({
     const calculateWidth = () => {
         const startDate = moment(event.start, 'YYYY-MM-DD');
         const endDate = moment(event.end, 'YYYY-MM-DD');
-        let duration = endDate.diff(startDate, 'days') + 1;
-        const REPALCe = 31;
-        return (duration / REPALCe) * 100;
+        const TOTAL_MONTHS_DURATION = moment(endDate).diff(startDate, 'months');
+        const TOTAL_DAYS_END = endDate.clone().endOf('month').date();
+        let duration = endDate.date();
+        if (TOTAL_MONTHS_DURATION > 0) {
+            duration = duration - startDate.date() + 1;
+        } else {
+            duration = moment.duration(endDate.diff(startDate)).days();
+        }
+        return TOTAL_MONTHS_DURATION * 100 + (100 / TOTAL_DAYS_END) * duration;
     };
 
     const handleDragStart = (e: React.DragEvent) => {
@@ -57,6 +63,7 @@ export const TimelineItem = ({
     return (
         <div
             data-tooltip-id="my-tooltip"
+            data-tooltip-place="bottom"
             draggable={true}
             data-tooltip-html={`<div>${event.name}</div><div>${event.start} / ${event.end}</div>`}
             key={event.id}
@@ -71,7 +78,7 @@ export const TimelineItem = ({
             onMouseEnter={() => handleMouseEnter(event)}
             onMouseLeave={handleMouseLeave}
             style={{
-                minWidth: `calc(${calculateWidth()}% - 16px)`,
+                minWidth: `${calculateWidth()}%`,
                 backgroundColor: event.color,
             }}
         >

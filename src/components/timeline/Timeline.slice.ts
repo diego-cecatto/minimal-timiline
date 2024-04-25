@@ -30,6 +30,13 @@ export declare type TimelineState = {
     events: Appontment[];
     monthIndex: number;
     dragging?: Appontment | null;
+    resizingEvent: {
+        item: Appontment | null;
+        propName: 'start' | 'end' | null;
+    };
+    screen: {
+        width: number;
+    };
 };
 
 const INITIAL_STATE: TimelineState = {
@@ -37,6 +44,13 @@ const INITIAL_STATE: TimelineState = {
     events: [],
     months: [],
     dragging: null,
+    resizingEvent: {
+        item: null,
+        propName: null,
+    },
+    screen: {
+        width: window.innerWidth,
+    },
 };
 
 const timelineReducer = createSlice({
@@ -88,8 +102,8 @@ const timelineReducer = createSlice({
         },
         changeDay: (state, action) => {
             let { event, propName, day, month } = action.payload;
-            console.log(event, propName, day, month);
-            var MONTH = state.months[state.monthIndex];
+            const start = moment(event.start, 'YYYY-MM-DD');
+            const MONTH = state.months[start.month()];
             const EV_INDEX = MONTH.events.findIndex((e) => {
                 return e.id === event.id;
             });
@@ -103,13 +117,6 @@ const timelineReducer = createSlice({
                     'YYYY-MM-DD'
                 ),
             };
-            // const date = moment(
-            //     event[propName].slice(0, 5) +
-            //         (state.monthIndex + 1) +
-            //         '-' +
-            //         (days + 1),
-            //     'YYYY-MM-DD'
-            // );
             MONTH.events[EV_INDEX] = NEW_EVENT;
             MONTH.events = reorderTimelineItemsByStartAndDuration(MONTH.events);
             return state;
@@ -173,8 +180,19 @@ const timelineReducer = createSlice({
             return state;
         },
         dragElement: (state, action) => {
-            console.log('dragElement');
             state.dragging = action.payload;
+            return state;
+        },
+        resizeElement: (state, action) => {
+            const { item, propName } = action.payload;
+            state.resizingEvent = {
+                item,
+                propName,
+            };
+            return state;
+        },
+        changeZoom: (state, action) => {
+            state.screen.width = action.payload;
             return state;
         },
     },
@@ -186,6 +204,8 @@ export const {
     init,
     changeInterval,
     dragElement,
+    resizeElement,
+    changeZoom,
 } = timelineReducer.actions;
 
 export default timelineReducer.reducer;

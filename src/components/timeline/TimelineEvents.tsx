@@ -9,6 +9,7 @@ import {
     changeInterval,
     changeName,
     dragElement,
+    resizeElement,
 } from './Timeline.slice';
 import { TimelineItem } from './TimelineItem';
 
@@ -19,17 +20,12 @@ declare type MonthProps = {
 export const Events = ({ monthIndex }: MonthProps) => {
     const [editing, setEditing] = useState<Appontment | null>();
     const [hoverItem, setHover] = useState<Appontment | null>();
-    // const [dragging, setDraggin] = useState<Appontment | null>();
-    const [resizingEvent, setResizingEvent] = useState<{
-        item: Appontment | null;
-        propName: 'start' | 'end' | null;
-    }>({ item: null, propName: null });
 
     const hoverHandlerRef = useRef<any>(null);
     const dragHandlerRef = useRef<any>(null);
 
     const dispatch = useDispatch();
-    const { months, dragging }: TimelineState = useSelector(
+    const { months, dragging, resizingEvent }: TimelineState = useSelector(
         (state: any) => state.timeline
     );
 
@@ -40,10 +36,12 @@ export const Events = ({ monthIndex }: MonthProps) => {
         if (item) {
             setHover(item);
         }
-        setResizingEvent({
-            item,
-            propName,
-        });
+        dispatch(
+            resizeElement({
+                item,
+                propName,
+            })
+        );
     };
 
     const resize = (event: React.MouseEvent) => {
@@ -61,10 +59,12 @@ export const Events = ({ monthIndex }: MonthProps) => {
     };
 
     const stopResize = () => {
-        setResizingEvent({
-            item: null,
-            propName: null,
-        });
+        dispatch(
+            resizeElement({
+                item: null,
+                propName: null,
+            })
+        );
     };
 
     useEffect(() => {
@@ -167,9 +167,6 @@ export const Events = ({ monthIndex }: MonthProps) => {
                     ).map((index) => (
                         <li
                             className={styles.laneDay}
-                            style={{
-                                width: `${100 / MONTH.totalDays}%`,
-                            }}
                             key={index}
                             onDragOver={(e) => onDragHover(e, index)}
                             onDrop={(e) => {
@@ -184,9 +181,6 @@ export const Events = ({ monthIndex }: MonthProps) => {
                                         ? styles.active
                                         : ''
                                 }`}
-                                style={{
-                                    width: `${100 / MONTH.totalDays}%`,
-                                }}
                                 onMouseUp={(e) => {
                                     e.stopPropagation();
                                     e.preventDefault();
@@ -195,7 +189,6 @@ export const Events = ({ monthIndex }: MonthProps) => {
                                 onMouseEnter={
                                     resizingEvent.item
                                         ? () => {
-                                              console.log(index, monthIndex);
                                               dispatch(
                                                   changeDay({
                                                       event: resizingEvent.item!,
@@ -215,7 +208,7 @@ export const Events = ({ monthIndex }: MonthProps) => {
                     ))}
                 </ul>
             </div>
-            <Tooltip id="my-tooltip" />
+            <Tooltip id="my-tooltip" place="bottom" />
         </>
     );
 };
