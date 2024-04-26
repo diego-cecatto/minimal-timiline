@@ -1,15 +1,24 @@
+import { useSelector } from 'react-redux';
 import styles from './Timeline.module.scss';
-import { TimelineMonth } from './Timeline.slice';
+import { TimelineMonth, TimelineState } from './Timeline.slice';
 
 declare type TimelineHeaderProps = {
     month: TimelineMonth;
 };
 
 export const TimelineHeader = ({ month }: TimelineHeaderProps) => {
+    const { screen }: TimelineState = useSelector(
+        (state: any) => state.timeline
+    );
     return (
         <div className={styles.timelineHeader}>
-            <div>{month.name}</div>
-            <ul className={styles.headerDays}>
+            <div>
+                {screen.width > 145 ? month.name : month.name.slice(0, 3)}
+            </div>
+            <ul
+                className={styles.headerDays}
+                style={{ opacity: screen.width < 645 ? 0 : 1 }}
+            >
                 {Array.from(
                     { length: month.totalDays },
                     (_, index) => index
