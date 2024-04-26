@@ -3,6 +3,8 @@ import { Appontment } from '../../actions/timeline/timeline.mock.ation';
 import { TimelineHeader } from './TimelineHeader';
 import { Events } from './TimelineEvents';
 import { useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,12 +16,16 @@ declare type TimelineProps = {
 
 export const Timeline = ({ events }: TimelineProps) => {
     const [showReset, setShowReset] = useState(false);
-    const { monthIndex, months, screen }: TimelineState = useSelector(
+    const [page, setPage] = useState(0);
+    const { months, screen }: TimelineState = useSelector(
         (state: any) => state.timeline
     );
     const dispatch = useDispatch();
     const handleChangeMonth = (index: number) => {
-        dispatch(changeMonth(index));
+        if (index < 0 || index > 11) {
+            return;
+        }
+        setPage(index);
     };
     const handleZoomIn = () => {
         dispatch(changeZoom(screen.width + 50));
@@ -45,34 +51,12 @@ export const Timeline = ({ events }: TimelineProps) => {
     return (
         <>
             <div
-                style={{ overflow: 'hidden' }}
+                style={{
+                    left: `-${screen.width * page}px`,
+                }}
                 onWheel={handleScroll}
                 className={styles.timelineContainer}
             >
-                {/* <div className={styles.month}>
-                    <span
-                    // className={
-                    //     styles.navigationIcon +
-                    //     ' ' +
-                    //     (currMonth.index <= 0 ? styles.disabled : '')
-                    // }
-                    // onClick={() => handleChangeMonth(currMonth.index - 1)}
-                    >
-                        <NavigateBeforeIcon />
-                    </span>
-
-                    <span
-                    // className={
-                    //     styles.navigationIcon +
-                    //     ' ' +
-                    //     (currMonth.index >= 11 ? styles.disabled : '')
-                    // }
-                    // onClick={() => handleChangeMonth(currMonth.index + 1)}
-                    >
-                        <NavigateNextIcon />
-                    </span>
-                </div> */}
-
                 {months.map((month, index) => (
                     <div
                         style={{ width: `${screen.width}px` }}
@@ -86,23 +70,44 @@ export const Timeline = ({ events }: TimelineProps) => {
             </div>
 
             <div className={styles.buttonsContainer}>
-                {showReset && (
+                <div className={styles.groupButtons}>
                     <button
-                        onClick={handleReset}
+                        className={styles.actionButtons}
+                        disabled={page <= 0}
+                        onClick={() => handleChangeMonth(page - 1)}
+                    >
+                        <NavigateBeforeIcon />
+                    </button>
+
+                    <button
+                        className={styles.actionButtons}
+                        onClick={() => handleChangeMonth(page + 1)}
+                    >
+                        <NavigateNextIcon />
+                    </button>
+                </div>
+                <div className={styles.groupButtons}>
+                    {showReset && (
+                        <button
+                            onClick={handleReset}
+                            className={styles.actionButtons}
+                        >
+                            <span>Reset</span>
+                        </button>
+                    )}
+                    <button
+                        onClick={handleZoomOut}
                         className={styles.actionButtons}
                     >
-                        Reset
+                        <RemoveIcon />
                     </button>
-                )}
-                <button
-                    onClick={handleZoomOut}
-                    className={styles.actionButtons}
-                >
-                    -
-                </button>
-                <button onClick={handleZoomIn} className={styles.actionButtons}>
-                    +
-                </button>
+                    <button
+                        onClick={handleZoomIn}
+                        className={styles.actionButtons}
+                    >
+                        <AddIcon />
+                    </button>
+                </div>
             </div>
         </>
     );

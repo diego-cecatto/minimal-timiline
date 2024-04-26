@@ -13,16 +13,24 @@ body {
 .timelineContainer {
     width: 100%;
     position: relative;
+
+    .navigationIcons {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        width: 300px;
+    }
+
     .timelineContainerItem {
         position: relative;
         width: 100%;
         flex: 0 0 auto;
         text-align: center;
         transition: opacity 0.3s ease;
-        background-color: #f0eeee;
-        &:nth-child(even) {
-            background-color: #e9e9e9;
-        }
+        // &:nth-child(even) {
+        //     background-color: #e9e9e9;
+        // }
     }
     .laneList {
         display: flex;
@@ -80,6 +88,31 @@ body {
             box-shadow: none;
             outline: none;
             font-size: 14px;
+        }
+    }
+}
+
+.buttonsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+
+    .groupButtons {
+        text-transform: uppercase;
+        .actionButtons {
+            &:hover {
+                background-color: #e8e1e1;
+            }
+            cursor: pointer;
+            margin-left: 12px;
+            border-radius: 5px;
+            height: 29px;
+            line-height: 24px;
+            svg {
+                width: 12px;
+                vertical-align: middle;
+            }
         }
     }
 }
@@ -153,18 +186,6 @@ body {
     width: 1px;
     height: 1px;
     overflow: hidden;
-}
-
-.buttonsContainer {
-    text-align: right;
-
-    .actionButtons {
-        background-color: #f9f9f9;
-        cursor: pointer;
-        margin-left: 10px;
-        padding: 4px 8px;
-        border-radius: 5px;
-    }
 }
 
 .timelineContainer {
