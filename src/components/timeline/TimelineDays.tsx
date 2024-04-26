@@ -29,7 +29,7 @@ export const TimelineDays = ({ month }: MonthProps) => {
             dispatch(
                 changeInterval({
                     event: dragging!,
-                    // month: month.index + 1,
+                    month: month.number,
                     day: index + 1,
                 })
             );
