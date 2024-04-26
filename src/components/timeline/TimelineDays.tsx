@@ -1,4 +1,3 @@
-import { Tooltip } from 'react-tooltip';
 import { useRef } from 'react';
 import styles from './Timeline.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -56,7 +55,6 @@ export const TimelineDays = ({ month }: MonthProps) => {
                     </li>
                 ))}
             </ul>
-            <Tooltip id="my-tooltip" place="bottom" />
         </>
     );
 };

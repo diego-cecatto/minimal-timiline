@@ -4,8 +4,9 @@ import { TimelineHeader } from './TimelineHeader';
 import { useSelector } from 'react-redux';
 import { TimelineState } from './Timeline.slice';
 import { BotomForwardedRef, TimelineBottom } from './TimelineBottom';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { TimelineDays } from './TimelineDays';
+import { Tooltip } from 'react-tooltip';
 
 declare type TimelineProps = {
     events: Appontment[];
@@ -13,9 +14,8 @@ declare type TimelineProps = {
 
 export const Timeline = ({ events }: TimelineProps) => {
     const bottomRef = useRef<BotomForwardedRef>(null);
-    const { page, months, screen }: TimelineState = useSelector(
-        (state: any) => state.timeline
-    );
+    const { page, months, screen, dragging, resizingEvent }: TimelineState =
+        useSelector((state: any) => state.timeline);
     return (
         <>
             <div
@@ -39,6 +39,9 @@ export const Timeline = ({ events }: TimelineProps) => {
                 ))}
             </div>
             <TimelineBottom ref={bottomRef} />
+            {!dragging && resizingEvent && (
+                <Tooltip id="my-tooltip" place="bottom" />
+            )}
         </>
     );
 };

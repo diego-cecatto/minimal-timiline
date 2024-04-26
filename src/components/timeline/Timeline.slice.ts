@@ -125,6 +125,9 @@ const timelineReducer = createSlice({
         changeInterval: (state, action) => {
             const { event, day, month } = action.payload;
             const start = moment(event.start, 'YYYY-MM-DD');
+            if (start.month() === month - 1 && start.date() === day) {
+                return state;
+            }
             var MONTH = state.months[start.month()];
             const EV_INDEX = MONTH.events.findIndex((e) => {
                 return e.id === event.id;

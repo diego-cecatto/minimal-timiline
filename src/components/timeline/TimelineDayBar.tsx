@@ -31,15 +31,29 @@ export const TimelineDayBar = ({
     const calculateWidth = () => {
         const startDate = moment(event.start, 'YYYY-MM-DD');
         const endDate = moment(event.end, 'YYYY-MM-DD');
-        const TOTAL_MONTHS_DURATION = moment(endDate).diff(startDate, 'months');
+        const TOTAL_MONTHS_DURATION = endDate.month() - startDate.month();
+        const TOTAL_DAYS_START = startDate.clone().endOf('month').date();
         const TOTAL_DAYS_END = endDate.clone().endOf('month').date();
-        let duration = endDate.date();
-        if (TOTAL_MONTHS_DURATION > 0) {
-            duration = duration - startDate.date() + 1;
-        } else {
-            duration = moment.duration(endDate.diff(startDate)).days();
+        if (TOTAL_MONTHS_DURATION >= 1) {
+            let durationStart = moment
+                .duration(
+                    moment(
+                        `${startDate.year()}-${
+                            startDate.month() + 1
+                        }-${TOTAL_DAYS_START}`,
+                        'YYYY-MM-DD'
+                    ).diff(startDate)
+                )
+                .days();
+            let durationEnd = endDate.date();
+            return (
+                (100 / TOTAL_DAYS_START) * durationStart +
+                (TOTAL_MONTHS_DURATION - 1) * 100 +
+                (100 / TOTAL_DAYS_END) * durationEnd
+            );
         }
-        return TOTAL_MONTHS_DURATION * 100 + (100 / TOTAL_DAYS_END) * duration;
+        let duration = moment.duration(endDate.diff(startDate)).days();
+        return (100 / TOTAL_DAYS_START) * duration;
     };
 
     const handleDragStart = (e: React.DragEvent) => {

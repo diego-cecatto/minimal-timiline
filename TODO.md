@@ -10,9 +10,6 @@ fixes
 //todo reducer is not validating change of month
 //todo at some point is shoing the wrong size of the element
 
-//ZOOM IN - ZOOM OUT
-//todo when are zooming not show trigger events like drag and resize and tooltip
-
 //GENERAL
 //todo add padding in each month
 //moment is showing some warning
@@ -22,3 +19,10 @@ v 2.0.0
 //todo add a button to add a new event
 //todo add a button to delete an event
 //improve D&D
+
+//hooks to timer clear
+//correct reducer
+//todo on resize keep item active
+
+//limits to next page
+//limits to D&D
