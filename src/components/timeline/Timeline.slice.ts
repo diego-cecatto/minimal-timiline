@@ -117,6 +117,13 @@ const timelineReducer = createSlice({
                 ...event,
                 [propName]: newDate.format('YYYY-MM-DD'),
             };
+            if (
+                moment(NEW_EVENT_DATE.end, 'YYYY-MM-DD').diff(
+                    moment(NEW_EVENT_DATE.start, 'YYYY-MM-DD')
+                ) <= 0
+            ) {
+                return state;
+            }
             if (propName === 'end' || start.month() === month - 1) {
                 MONTH.events[EV_INDEX] = NEW_EVENT_DATE;
                 MONTH.events = reorderTimelineItemsByStartAndDuration(
