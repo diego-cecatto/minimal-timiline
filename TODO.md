@@ -3,31 +3,19 @@
 
 fixes
 //todo is not ordening rightly
-//todo if I click outer of the range of resizing cancel the resizing
-
-//IMPROVMENTS
+//todo validate editing name in diffrent month
 
 //DRAG & DROP
-//todo on drag change cursor
-//todo when are dragging not show trigger events like tooltip
 //todo if is resizing the not resize less than the size of the element
+//todo reducer is not validating change of month
+//todo at some point is shoing the wrong size of the element
 
 //ZOOM IN - ZOOM OUT
 //todo when are zooming not show trigger events like drag and resize and tooltip
-//todo minimun zoom will be when all months are showing in the screen
-
-//RESPONSIVITY
-//hidde the number of days in some small zoom resolutions
-
-//INTERACTION
-//todo prev and next is not to about the month but yes about the page
 
 //GENERAL
-//todo resize between months doesn't work
-//todo organize SCSS
-//todo organize layout
-//todo organize code
 //todo add padding in each month
+//moment is showing some warning
 
 v 2.0.0
 //todo create icon to edit in a modal to go to the month that user want to edit

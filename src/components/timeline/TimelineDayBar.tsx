@@ -1,8 +1,7 @@
 import moment from 'moment';
-import { Appontment } from '../../actions/timeline/timeline.mock.ation';
 import styles from './Timeline.module.scss';
-
-declare type LaneItemProps = {
+import { Appontment } from '../../actions/timeline/timeline.mock.ation';
+declare type TimeLineDayBarProps = {
     event: Appontment;
     hoverItem: Appontment | null | undefined;
     dragginItem: Appontment | null | undefined;
@@ -17,8 +16,7 @@ declare type LaneItemProps = {
     handleChangeName: (event: Appontment, name: string) => void;
     handleDrag: (event: Appontment | null) => void;
 };
-
-export const TimelineItem = ({
+export const TimelineDayBar = ({
     event,
     hoverItem,
     editing,
@@ -29,7 +27,7 @@ export const TimelineItem = ({
     handleStartEditItem,
     handleChangeName,
     handleDrag,
-}: LaneItemProps) => {
+}: TimeLineDayBarProps) => {
     const calculateWidth = () => {
         const startDate = moment(event.start, 'YYYY-MM-DD');
         const endDate = moment(event.end, 'YYYY-MM-DD');

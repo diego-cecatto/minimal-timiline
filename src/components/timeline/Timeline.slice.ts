@@ -8,6 +8,7 @@ import {
 } from './Timeline.utils';
 
 export declare type TimelineMonth = {
+    number: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
     name:
         | 'January'
         | 'February'
@@ -28,7 +29,7 @@ export declare type TimelineMonth = {
 export declare type TimelineState = {
     months: TimelineMonth[];
     events: Appontment[];
-    monthIndex: number;
+    page: number;
     dragging?: Appontment | null;
     resizingEvent: {
         item: Appontment | null;
@@ -40,7 +41,7 @@ export declare type TimelineState = {
 };
 
 const INITIAL_STATE: TimelineState = {
-    monthIndex: 0,
+    page: 0,
     events: [],
     months: [],
     dragging: null,
@@ -59,18 +60,18 @@ const timelineReducer = createSlice({
     reducers: {
         init: (state, action) => {
             let MONTHS: TimelineMonth[] = [
-                { name: 'January', events: [], totalDays: 0 },
-                { name: 'February', events: [], totalDays: 0 },
-                { name: 'March', events: [], totalDays: 0 },
-                { name: 'April', events: [], totalDays: 0 },
-                { name: 'May', events: [], totalDays: 0 },
-                { name: 'June', events: [], totalDays: 0 },
-                { name: 'July', events: [], totalDays: 0 },
-                { name: 'August', events: [], totalDays: 0 },
-                { name: 'September', events: [], totalDays: 0 },
-                { name: 'October', events: [], totalDays: 0 },
-                { name: 'November', events: [], totalDays: 0 },
-                { name: 'December', events: [], totalDays: 0 },
+                { number: 1, name: 'January', events: [], totalDays: 0 },
+                { number: 2, name: 'February', events: [], totalDays: 0 },
+                { number: 3, name: 'March', events: [], totalDays: 0 },
+                { number: 4, name: 'April', events: [], totalDays: 0 },
+                { number: 5, name: 'May', events: [], totalDays: 0 },
+                { number: 6, name: 'June', events: [], totalDays: 0 },
+                { number: 7, name: 'July', events: [], totalDays: 0 },
+                { number: 8, name: 'August', events: [], totalDays: 0 },
+                { number: 9, name: 'September', events: [], totalDays: 0 },
+                { number: 10, name: 'October', events: [], totalDays: 0 },
+                { number: 11, name: 'November', events: [], totalDays: 0 },
+                { number: 12, name: 'December', events: [], totalDays: 0 },
             ];
             var startingMonth: number = 0;
             for (const item of action.payload) {
@@ -96,7 +97,7 @@ const timelineReducer = createSlice({
                 });
             }
             state.months = MONTHS;
-            state.monthIndex = startingMonth;
+            state.page = startingMonth;
             state.events = action.payload;
             return state;
         },
@@ -159,17 +160,17 @@ const timelineReducer = createSlice({
             state.dragging = NEW_EVENT_DATE;
             return state;
         },
-        changeMonth: (state, action) => {
-            const monthIndex = action.payload;
-            if (monthIndex > 11 || monthIndex < 0) {
+        changePage: (state, action) => {
+            const PAGE = action.payload;
+            if (PAGE < 0) {
                 return state;
             }
-            state.monthIndex = monthIndex;
+            state.page = PAGE;
             return state;
         },
         changeName: (state, action) => {
             const { event, name } = action.payload;
-            var MONTH = state.months[state.monthIndex];
+            var MONTH = state.months[state.page];
             const EV_INDEX = MONTH.events.findIndex((e) => {
                 return e.id === event.id;
             });
@@ -200,7 +201,7 @@ const timelineReducer = createSlice({
 export const {
     changeName,
     changeDay,
-    changeMonth,
+    changePage,
     init,
     changeInterval,
     dragElement,
