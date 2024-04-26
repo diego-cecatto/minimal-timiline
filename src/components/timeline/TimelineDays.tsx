@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import styles from './Timeline.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,13 +7,14 @@ import {
     dragElement,
 } from './Timeline.slice';
 import { TimelineDaysBars } from './TimelineDayBars';
+import { useDebouncedCallback } from '../../hooks/useDebouncingCallback';
 
 declare type MonthProps = {
     month: TimelineMonth;
 };
 
 export const TimelineDays = ({ month }: MonthProps) => {
-    const dragHandlerRef = useRef<any>(null);
+    const { debounceCall } = useDebouncedCallback();
 
     const dispatch = useDispatch();
     const { dragging }: TimelineState = useSelector(
@@ -23,8 +23,7 @@ export const TimelineDays = ({ month }: MonthProps) => {
 
     const onDragHover = (e: React.DragEvent, index: number) => {
         e.preventDefault();
-        clearTimeout(dragHandlerRef.current);
-        dragHandlerRef.current = setTimeout(() => {
+        debounceCall(() => {
             dispatch(
                 changeInterval({
                     event: dragging!,

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Timeline.module.scss';
 import { Appontment } from '../../actions/timeline/timeline.mock.ation';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,13 +11,14 @@ import {
     resizeElement,
 } from './Timeline.slice';
 import { TimelineDayBar } from './TimelineDayBar';
+import { useDebouncedCallback } from '../../hooks/useDebouncingCallback';
 
 declare type TimelineBarsProps = {
     day: number;
     month: TimelineMonth;
 };
 export const TimelineDaysBars = ({ day, month }: TimelineBarsProps) => {
-    const hoverHandlerRef = useRef<any>(null);
+    const { debounceCall, debounce: debounceHover } = useDebouncedCallback();
     const [hoverItem, setHover] = useState<Appontment | null>();
     const [editing, setEditing] = useState<Appontment | null>();
     const dispatch = useDispatch();
@@ -49,12 +50,11 @@ export const TimelineDaysBars = ({ day, month }: TimelineBarsProps) => {
     const handleCloseEdit = () => {
         setEditing(null);
         document.removeEventListener('click', handleCloseEdit);
-        clearTimeout(hoverHandlerRef.current);
+        debounceHover();
     };
 
     const handleMouseEnter = (event: Appontment) => {
-        clearTimeout(hoverHandlerRef.current);
-        hoverHandlerRef.current = setTimeout(() => {
+        debounceCall(() => {
             setHover(event);
         }, 250);
     };
@@ -63,8 +63,7 @@ export const TimelineDaysBars = ({ day, month }: TimelineBarsProps) => {
         if (resizingEvent.item) {
             return;
         }
-        clearTimeout(hoverHandlerRef.current);
-        hoverHandlerRef.current = setTimeout(() => {
+        debounceCall(() => {
             setHover(null);
         }, 300);
     };

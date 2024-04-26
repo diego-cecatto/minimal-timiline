@@ -4,7 +4,7 @@ import { TimelineHeader } from './TimelineHeader';
 import { useSelector } from 'react-redux';
 import { TimelineState } from './Timeline.slice';
 import { BotomForwardedRef, TimelineBottom } from './TimelineBottom';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { TimelineDays } from './TimelineDays';
 import { Tooltip } from 'react-tooltip';
 
