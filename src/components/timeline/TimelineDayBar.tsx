@@ -1,6 +1,8 @@
 import moment from 'moment';
 import styles from './Timeline.module.scss';
 import { Appontment } from '../../actions/timeline/timeline.mock.ation';
+import { TimelineState } from './Timeline.slice';
+import { useSelector } from 'react-redux';
 declare type TimeLineDayBarProps = {
     event: Appontment;
     hoverItem: Appontment | null | undefined;
@@ -28,6 +30,9 @@ export const TimelineDayBar = ({
     handleChangeName,
     handleDrag,
 }: TimeLineDayBarProps) => {
+    const { resizingEvent }: TimelineState = useSelector(
+        (state: any) => state.timeline
+    );
     const calculateWidth = () => {
         const startDate = moment(event.start, 'YYYY-MM-DD');
         const endDate = moment(event.end, 'YYYY-MM-DD');
@@ -67,9 +72,10 @@ export const TimelineDayBar = ({
 
     const CLASS_NAME = `${styles.event} ${
         (hoverItem && hoverItem.id === event.id) ||
-        (editing && editing.id === event.id)
+        (editing && editing.id === event.id) ||
+        resizingEvent.item?.id === event.id
             ? styles.hover
-            : null
+            : ''
     } ${dragginItem && dragginItem.id === event.id ? styles.dragging : ''}`;
 
     return (

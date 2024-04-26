@@ -112,14 +112,27 @@ const timelineReducer = createSlice({
                 return state;
             }
             var currDate = moment(event[propName]);
-            const NEW_EVENT = {
+            const newDate = moment(`${currDate.year()}-${month}-${day}`);
+            const NEW_EVENT_DATE = {
                 ...event,
-                [propName]: moment(`${currDate.year()}-${month}-${day}`).format(
-                    'YYYY-MM-DD'
-                ),
+                [propName]: newDate.format('YYYY-MM-DD'),
             };
-            MONTH.events[EV_INDEX] = NEW_EVENT;
-            MONTH.events = reorderTimelineItemsByStartAndDuration(MONTH.events);
+            if (propName === 'end' || start.month() === month - 1) {
+                MONTH.events[EV_INDEX] = NEW_EVENT_DATE;
+                MONTH.events = reorderTimelineItemsByStartAndDuration(
+                    MONTH.events
+                );
+            } else {
+                MONTH.events.splice(EV_INDEX, 1);
+                state.months[newDate.month()].events =
+                    reorderTimelineItemsByStartAndDuration([
+                        ...state.months[newDate.month()].events,
+                        NEW_EVENT_DATE,
+                    ]);
+            }
+            if (state.resizingEvent.item) {
+                state.resizingEvent.item = NEW_EVENT_DATE;
+            }
             return state;
         },
         changeInterval: (state, action) => {
@@ -173,7 +186,8 @@ const timelineReducer = createSlice({
         },
         changeName: (state, action) => {
             const { event, name } = action.payload;
-            var MONTH = state.months[state.page];
+            const start = moment(event.start, 'YYYY-MM-DD');
+            var MONTH = state.months[start.month()];
             const EV_INDEX = MONTH.events.findIndex((e) => {
                 return e.id === event.id;
             });
