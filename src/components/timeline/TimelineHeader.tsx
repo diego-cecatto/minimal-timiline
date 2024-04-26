@@ -1,25 +1,20 @@
 import styles from './Timeline.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { TimelineState, changeMonth } from './Timeline.slice';
+import { TimelineMonth } from './Timeline.slice';
 
 declare type TimelineHeaderProps = {
-    monthIndex: number;
+    month: TimelineMonth;
 };
 
-export const TimelineHeader = ({ monthIndex }: TimelineHeaderProps) => {
-    const { months }: TimelineState = useSelector(
-        (state: any) => state.timeline
-    );
-    const MONTH = months[monthIndex];
+export const TimelineHeader = ({ month }: TimelineHeaderProps) => {
     return (
-        <div className={styles.headerContainer}>
-            <div>{MONTH.name}</div>
-            <ul className={styles.dayList}>
+        <div className={styles.timelineHeader}>
+            <div>{month.name}</div>
+            <ul className={styles.headerDays}>
                 {Array.from(
-                    { length: MONTH.totalDays },
+                    { length: month.totalDays },
                     (_, index) => index
                 ).map((index) => (
-                    <li className={styles.day} key={index}>
+                    <li className={styles.headerDay} key={index}>
                         {index + 1}
                     </li>
                 ))}
