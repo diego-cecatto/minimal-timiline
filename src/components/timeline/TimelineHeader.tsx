@@ -1,57 +1,29 @@
+import { useSelector } from 'react-redux';
 import styles from './Timeline.module.scss';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import { useDispatch, useSelector } from 'react-redux';
-import { TimelineState, changeMonth } from './Timeline.slice';
+import { TimelineMonth, TimelineState } from './Timeline.slice';
 
-export const TimelineHeader = ({ zoom }: any) => {
-    const dispatch = useDispatch();
-    const { months, currMonth }: TimelineState = useSelector(
+declare type TimelineHeaderProps = {
+    month: TimelineMonth;
+};
+
+export const TimelineHeader = ({ month }: TimelineHeaderProps) => {
+    const { screen }: TimelineState = useSelector(
         (state: any) => state.timeline
     );
-    const handleChangeMonth = (index: number) => {
-        dispatch(changeMonth(index));
-    };
-    const MONTH = months[currMonth.index];
-
     return (
-        <div className={styles.headerContainer}>
-            <div className={styles.month}>
-                <span
-                    className={
-                        styles.navigationIcon +
-                        ' ' +
-                        (currMonth.index <= 0 ? styles.disabled : '')
-                    }
-                    onClick={() => handleChangeMonth(currMonth.index - 1)}
-                >
-                    <NavigateBeforeIcon />
-                </span>
-                {MONTH.name}
-                <span
-                    className={
-                        styles.navigationIcon +
-                        ' ' +
-                        (currMonth.index >= 11 ? styles.disabled : '')
-                    }
-                    onClick={() => handleChangeMonth(currMonth.index + 1)}
-                >
-                    <NavigateNextIcon />
-                </span>
+        <div className={styles.timelineHeader}>
+            <div>
+                {screen.width > 145 ? month.name : month.name.slice(0, 3)}
             </div>
             <ul
-                className={styles.dayList}
-                style={{
-                    width: `${zoom}px`,
-                    overflow: 'hidden',
-                    overflowY: 'hidden',
-                }}
+                className={styles.headerDays}
+                style={{ opacity: screen.width < 645 ? 0 : 1 }}
             >
                 {Array.from(
-                    { length: currMonth.daysInMonth },
+                    { length: month.totalDays },
                     (_, index) => index
                 ).map((index) => (
-                    <li className={styles.day} key={index}>
+                    <li className={styles.headerDay} key={index}>
                         {index + 1}
                     </li>
                 ))}

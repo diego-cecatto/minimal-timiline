@@ -1,27 +1,23 @@
 import moment from 'moment';
-import { Appontment } from '../../actions/timeline/timeline.mock.ation';
 import styles from './Timeline.module.scss';
-
-declare type LaneItemProps = {
+import { Appontment } from '../../actions/timeline/timeline.mock.ation';
+declare type TimeLineDayBarProps = {
     event: Appontment;
-    currMonth: {
-        index: number;
-        daysInMonth: number;
-    };
     hoverItem: Appontment | null | undefined;
     dragginItem: Appontment | null | undefined;
     editing: Appontment | null | undefined;
     handleMouseEnter: (event: Appontment) => void;
     handleMouseLeave: (event: React.MouseEvent) => void;
     handleStartEditItem: (event: Appontment) => void;
-    handleResize: (event: Appontment, pos: 'start' | 'end' | null) => void;
+    handleResize: (
+        event: Appontment | null,
+        pos: 'start' | 'end' | null
+    ) => void;
     handleChangeName: (event: Appontment, name: string) => void;
     handleDrag: (event: Appontment | null) => void;
 };
-
-export const TimelineItem = ({
+export const TimelineDayBar = ({
     event,
-    currMonth,
     hoverItem,
     editing,
     dragginItem,
@@ -31,15 +27,19 @@ export const TimelineItem = ({
     handleStartEditItem,
     handleChangeName,
     handleDrag,
-}: LaneItemProps) => {
+}: TimeLineDayBarProps) => {
     const calculateWidth = () => {
         const startDate = moment(event.start, 'YYYY-MM-DD');
         const endDate = moment(event.end, 'YYYY-MM-DD');
-        let duration = endDate.diff(startDate, 'days') + 1;
-        if (duration > currMonth.daysInMonth) {
-            duration = currMonth.daysInMonth - startDate.date() + 1;
+        const TOTAL_MONTHS_DURATION = moment(endDate).diff(startDate, 'months');
+        const TOTAL_DAYS_END = endDate.clone().endOf('month').date();
+        let duration = endDate.date();
+        if (TOTAL_MONTHS_DURATION > 0) {
+            duration = duration - startDate.date() + 1;
+        } else {
+            duration = moment.duration(endDate.diff(startDate)).days();
         }
-        return (duration / currMonth.daysInMonth) * 100;
+        return TOTAL_MONTHS_DURATION * 100 + (100 / TOTAL_DAYS_END) * duration;
     };
 
     const handleDragStart = (e: React.DragEvent) => {
@@ -50,6 +50,7 @@ export const TimelineItem = ({
         e.dataTransfer.setDragImage(invisibleImage, 0, 0);
         e.dataTransfer.dropEffect = 'move';
     };
+
     const CLASS_NAME = `${styles.event} ${
         (hoverItem && hoverItem.id === event.id) ||
         (editing && editing.id === event.id)
@@ -60,6 +61,7 @@ export const TimelineItem = ({
     return (
         <div
             data-tooltip-id="my-tooltip"
+            data-tooltip-place="bottom"
             draggable={true}
             data-tooltip-html={`<div>${event.name}</div><div>${event.start} / ${event.end}</div>`}
             key={event.id}
@@ -68,18 +70,23 @@ export const TimelineItem = ({
             onDrag={(e) => {
                 handleDrag(event);
             }}
+            onDrop={() => handleDrag(null)}
             onDragExit={() => handleDrag(null)}
             onDragEnd={() => handleDrag(null)}
             onMouseEnter={() => handleMouseEnter(event)}
             onMouseLeave={handleMouseLeave}
             style={{
-                minWidth: `calc(${calculateWidth()}% - 16px)`,
+                minWidth: `${calculateWidth()}%`,
                 backgroundColor: event.color,
             }}
         >
             <div
                 className={styles.startHandlerResize}
-                onMouseDown={(e) => handleResize(event, 'start')}
+                onMouseDown={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleResize(event, 'start');
+                }}
             >
                 &nbsp;
             </div>
@@ -97,7 +104,11 @@ export const TimelineItem = ({
             )}
             <div
                 className={styles.endHandlerResize}
-                onMouseDown={(e) => handleResize(event, 'end')}
+                onMouseDown={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleResize(event, 'end');
+                }}
             >
                 &nbsp;
             </div>
